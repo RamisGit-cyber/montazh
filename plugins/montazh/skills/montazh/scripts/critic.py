@@ -109,6 +109,9 @@ def check_picture(workdir, face, has_inserts, backdrop, layout, problems, notes)
     if layout.get("engine") == "hyperframes" and re.fullmatch(r"afisha-hf/run-\d+/front-frames/frame_%06d\.png", str(layout.get("hf_front"))):
         # Афиша через HyperFrames: надписи перед человеком лежат отдельным слоем с прозрачностью, яркость = непрозрачность буквы
         # (слово-тема за человеком слой «behind», лицо оно по определению не закрывает и здесь не проверяется)
+        front_dir = os.path.join(workdir, os.path.dirname(layout["hf_front"]))
+        if os.path.islink(front_dir) or any(os.path.islink(os.path.join(front_dir, name)) for name in os.listdir(front_dir)):
+            sys.exit("В папке кадров надписей лежит ссылка (symlink), проверку не делаю")
         mask_args = ["-framerate", "30", "-i", layout["hf_front"],
                      "-vf", f"fps={SAMPLE_FPS},scale={SMALL_W}:{SMALL_H},format=rgba,alphaextract,format=gray"]
     else:

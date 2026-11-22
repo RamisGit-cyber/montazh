@@ -293,6 +293,17 @@ def build(project, plan_path):
     # Маска человека (mask.mp4 рядом с base.mp4, её делает segment.py): слово-тема «Афиши» встаёт за человека
     mask_file = os.path.join(workdir, "mask.mp4")
     use_mask = style_plan.get("preset") == "afisha" and os.path.isfile(mask_file) and not windows and not plan.get("inserts")
+    if use_mask:
+        # Маску проверяем так же, как остальные входы: не ссылка, внутри проекта, настоящее видео mp4/mov,
+        # и по длине совпадает с base.mp4 (иначе ffmpeg может прочитать подсунутый плейлист или чужой файл).
+        own_output(project, mask_file)
+        media_file(project, os.path.relpath(mask_file, project))
+        mask_names = set(probe(mask_file).get("format", {}).get("format_name", "").split(","))
+        base_length = float(probe(os.path.join(workdir, "base.mp4")).get("format", {}).get("duration") or 0)
+        mask_length = float(probe(mask_file).get("format", {}).get("duration") or 0)
+        if not mask_names & {"mov", "mp4"} or abs(base_length - mask_length) > 0.5:
+            print("Маска человека не подходит (не mp4 или другая длина): «Афиша» пойдёт без неё.")
+            use_mask = False
     if style_plan.get("preset") == "afisha" and not use_mask:
         print("Маски человека нет: слово-тема «Афиши» встанет над головой, а не за ней (маска: references/ustanovka.md, «Маска человека»).")
     copy_fonts(project, FONTS_SRC, os.path.join(workdir, "fonts"))
