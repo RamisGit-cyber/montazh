@@ -1,0 +1,12 @@
+{
+  "name": "montazh",
+  "description": "Агентный монтаж рилсов «говорящая голова» для Claude Code",
+  "owner": { "name": "Fusion AI" },
+  "plugins": [
+    {
+      "name": "montazh",
+      "source": "./plugins/montazh",
+      "description": "Монтажёр рилсов: режет паузы, ставит субтитры и вставки, проверяет себя критиком"
+    }
+  ]
+}

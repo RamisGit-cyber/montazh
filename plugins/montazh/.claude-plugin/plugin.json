@@ -1,0 +1,9 @@
+{
+  "name": "montazh",
+  "version": "1.0.0",
+  "displayName": "Монтаж рилсов",
+  "description": "Агентный монтаж рилсов «говорящая голова»: расшифровка, резка пауз, субтитры, вставки, музыка и обязательный критик",
+  "author": { "name": "Fusion AI" },
+  "license": "MIT",
+  "keywords": ["video", "reels", "montage", "subtitles", "russian"]
+}
